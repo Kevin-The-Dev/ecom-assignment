@@ -1,73 +1,146 @@
-# Welcome to your Lovable project
 
-## Project info
+# Kevin's Computer Accessories Shop
 
-**URL**: https://lovable.dev/projects/c47c92bd-8698-435b-825e-fb12271a12c8
+A modern e-commerce web application built with React.js and Tailwind CSS, specializing in computer accessories for the Indian market.
 
-## How can I edit this code?
+## 🌟 Features
 
-There are several ways of editing your application.
+### 🏠 Home Page
+- Responsive grid layout of computer accessories
+- Product cards with:
+  - Image preview
+  - Title
+  - Price in INR
+  - Add to cart functionality
+  - Quantity controls
+- Smooth animations on interactions
 
-**Use Lovable**
+### 🛒 Shopping Cart
+- Sliding sidebar animation
+- Real-time cart updates
+- Product management:
+  - Adjust quantities
+  - Remove items
+  - View total price
+- Proceed to payment option
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c47c92bd-8698-435b-825e-fb12271a12c8) and start prompting.
+### 💳 Payment Section
+- Multiple payment options:
+  - Razorpay integration
+  - Google Pay
+  - UPI with QR code
+- Order summary with:
+  - Items list
+  - Subtotal
+  - Shipping fee (free above ₹10,000)
+  - GST calculation (18%)
+  - Total amount
 
-Changes made via Lovable will be committed automatically to this repo.
+### ✅ Order Confirmation
+- Thank you message with animation
+- Order details:
+  - Generated order ID
+  - Purchase summary
+  - Delivery estimation
+  - Payment method used
 
-**Use your preferred IDE**
+## 🔧 Technical Implementation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### Project Structure
+```
+src/
+├── components/
+│   ├── CartItem.tsx         # Individual cart item component
+│   ├── CartSidebar.tsx      # Shopping cart sidebar
+│   ├── Footer.tsx           # Website footer
+│   ├── PaymentSection.tsx   # Payment processing
+│   ├── ProductCard.tsx      # Product display card
+│   └── ThankYouSection.tsx  # Order confirmation
+├── context/
+│   └── CartContext.tsx      # Cart state management
+├── data/
+│   └── sampleProducts.ts    # Product database
+├── pages/
+│   ├── Index.tsx           # Home page
+│   └── NotFound.tsx        # 404 page
+└── types.ts                # TypeScript definitions
 ```
 
-**Edit a file directly in GitHub**
+### Key Technologies
+- **React.js**: Frontend framework
+- **TypeScript**: Type safety and better development experience
+- **Tailwind CSS**: Utility-first styling
+- **Context API**: State management
+- **React Router**: Navigation
+- **Sonner**: Toast notifications
+- **Lucide React**: Icon library
+- **TanStack Query**: Data fetching
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### State Management
+The application uses React's Context API with useReducer for cart state management. The cart state includes:
+- Items in cart
+- Cart visibility
+- Payment status
+- Order information
 
-**Use GitHub Codespaces**
+### Animations
+Implemented using Tailwind's built-in animation utilities:
+- Fade-in/out effects
+- Sliding animations
+- Scale transitions
+- Hover effects
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 💡 Usage
 
-## What technologies are used for this project?
+1. **Browse Products**
+   - View computer accessories on the home page
+   - Hover over products for additional information
 
-This project is built with:
+2. **Shopping Cart**
+   - Click "Add to Cart" on products
+   - Adjust quantities using +/- buttons
+   - Remove items using the trash icon
+   - View cart total and proceed to payment
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+3. **Payment Process**
+   - Select payment method
+   - Review order summary
+   - Complete transaction
+   - View order confirmation
 
-## How can I deploy this project?
+## 🚀 Getting Started
 
-Simply open [Lovable](https://lovable.dev/projects/c47c92bd-8698-435b-825e-fb12271a12c8) and click on Share -> Publish.
+```bash
+# Install dependencies
+npm install
 
-## Can I connect a custom domain to my Lovable project?
+# Start development server
+npm run dev
 
-Yes, you can!
+# Build for production
+npm run build
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📱 Responsive Design
+The application is fully responsive and works seamlessly on:
+- Desktop computers
+- Tablets
+- Mobile devices
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 🎨 Styling
+- Modern and clean UI using Tailwind CSS
+- Consistent color scheme with purple accent colors
+- Responsive grid layouts
+- Interactive animations
+- Mobile-first approach
+
+## 🔔 Notifications
+Toast notifications inform users about:
+- Products added to cart
+- Items removed from cart
+- Successful payments
+- Other important actions
+
+## 👨‍💻 Developer
+Website developed by Kevin Patel
+Portfolio: [https://kevinpatel.me/](https://kevinpatel.me/)
