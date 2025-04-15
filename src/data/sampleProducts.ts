@@ -28,7 +28,7 @@ export const sampleProducts = [
     id: 5,
     title: "27\" Gaming Monitor 144Hz",
     price: 24999,
-    image: "https://m.media-amazon.com/images/I/71ytMOWT5OL.jpg",
+    image: "https://tse3.mm.bing.net/th?id=OIP.TKADVGy6o70gAOgtE4ZMWAHaGJ&pid=Api&P=0&h=220",
   },
   {
     id: 6,
