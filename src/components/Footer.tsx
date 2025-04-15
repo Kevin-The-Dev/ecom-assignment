@@ -10,10 +10,12 @@ const Footer = () => {
           href="https://kevinpatel.me/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 text-purple-600 hover:text-purple-800 transition-colors"
+          className="flex items-center gap-1 text-purple-600 hover:text-purple-800 transition-colors duration-300"
         >
           <GlobeIcon className="w-4 h-4" />
-          <span className="underline">Portfolio</span>
+          <span className="relative inline-block after:absolute after:content-[''] after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-purple-600 after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">
+            Portfolio
+          </span>
         </a>
       </div>
     </footer>

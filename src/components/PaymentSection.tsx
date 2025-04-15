@@ -1,85 +1,174 @@
 
 import { useState } from "react";
-import { CreditCard } from "lucide-react";
-import { CartItem } from "../types";
+import { X, CreditCard, ArrowRight, QrCode } from "lucide-react";
+import { formatIndianRupee } from "@/types";
+import { useCart } from "@/context/CartContext";
+import { toast } from "sonner";
 
-interface PaymentSectionProps {
-  items: CartItem[];
-  onClose: () => void;
-}
-
-const PaymentSection = ({ items, onClose }: PaymentSectionProps) => {
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "paypal">("card");
+const PaymentSection = () => {
+  const { state, dispatch } = useCart();
+  const { items, isPaymentOpen } = state;
+  const [paymentMethod, setPaymentMethod] = useState<"razorpay" | "googlepay" | "upi" | null>(null);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  
+  const expectedDelivery = new Date();
+  expectedDelivery.setDate(expectedDelivery.getDate() + 5);
+  const deliveryDate = expectedDelivery.toLocaleDateString('en-IN', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+
+  const handleClose = () => {
+    dispatch({ type: "SET_PAYMENT_OPEN", payload: false });
+  };
+
+  const handleSelectPaymentMethod = (method: "razorpay" | "googlepay" | "upi") => {
+    setPaymentMethod(method);
+    dispatch({ type: "SET_PAYMENT_METHOD", payload: method });
+  };
+
+  const handleCompletePayment = () => {
+    if (!paymentMethod) {
+      toast.error("Please select a payment method");
+      return;
+    }
+    
+    toast.success("Payment Successful!");
+    dispatch({ type: "COMPLETE_ORDER" });
+  };
+
+  if (!isPaymentOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-        <div className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">Payment Method</h2>
-          
-          <div className="space-y-4 mb-6">
-            <button
-              onClick={() => setPaymentMethod("card")}
-              className={`w-full flex items-center gap-3 p-4 rounded-lg border ${
-                paymentMethod === "card"
-                  ? "border-purple-600 bg-purple-50"
-                  : "border-gray-200"
-              }`}
-            >
-              <CreditCard className={`w-6 h-6 ${
-                paymentMethod === "card" ? "text-purple-600" : "text-gray-400"
-              }`} />
-              <span className="font-medium">Credit Card</span>
-            </button>
-
-            <button
-              onClick={() => setPaymentMethod("paypal")}
-              className={`w-full flex items-center gap-3 p-4 rounded-lg border ${
-                paymentMethod === "paypal"
-                  ? "border-purple-600 bg-purple-50"
-                  : "border-gray-200"
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 384 512"
-                className={`w-6 h-6 ${
-                  paymentMethod === "paypal" ? "text-purple-600" : "text-gray-400"
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl overflow-hidden">
+        <div className="flex justify-between items-center p-6 border-b">
+          <h2 className="text-2xl font-semibold">Payment Method</h2>
+          <button
+            onClick={handleClose}
+            className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-6 p-6">
+          <div className="space-y-6">
+            <h3 className="font-semibold text-lg border-b pb-2">Select Payment Method</h3>
+            
+            <div className="space-y-4">
+              <button
+                onClick={() => handleSelectPaymentMethod("razorpay")}
+                className={`w-full flex items-center gap-3 p-4 rounded-lg border transition-all ${
+                  paymentMethod === "razorpay"
+                    ? "border-purple-600 bg-purple-50"
+                    : "border-gray-200 hover:border-purple-300"
                 }`}
-                fill="currentColor"
               >
-                <path d="M111.4 295.9c-3.5 19.2-17.4 108.7-21.5 134-.3 1.8-1 2.5-3 2.5H12.3c-7.6 0-13.1-6.6-12.1-13.9L58.8 46.6c1.5-9.6 10.1-16.9 20-16.9 152.3 0 165.1-3.7 204 11.4 60.1 23.3 65.6 79.5 44 140.3-21.5 62.6-72.5 89.5-140.1 90.3-43.4.7-69.5-7-75.3 24.2zM357.1 152c-1.8-1.3-2.5-1.8-3 1.3-2 11.4-5.1 22.5-8.8 33.6-39.9 113.8-150.5 103.9-204.5 103.9-6.1 0-10.1 3.3-10.9 9.4-22.6 140.4-27.1 169.7-27.1 169.7-1 7.1 3.5 12.9 10.6 12.9h63.5c8.6 0 15.7-6.3 17.4-14.9.7-5.4-1.1 6.1 14.4-91.3 4.6-22 14.3-19.7 29.3-19.7 71 0 126.4-28.8 142.9-112.3 6.5-34.8 4.6-71.4-23.8-92.6z"/>
-              </svg>
-              <span className="font-medium">PayPal</span>
-            </button>
-          </div>
+                <CreditCard className={`w-6 h-6 ${
+                  paymentMethod === "razorpay" ? "text-purple-600" : "text-gray-400"
+                }`} />
+                <span className="font-medium">Razorpay</span>
+              </button>
 
-          <div className="border-t pt-4">
-            <h3 className="font-semibold mb-3">Order Summary</h3>
-            <div className="space-y-2 mb-4">
+              <button
+                onClick={() => handleSelectPaymentMethod("googlepay")}
+                className={`w-full flex items-center gap-3 p-4 rounded-lg border transition-all ${
+                  paymentMethod === "googlepay"
+                    ? "border-purple-600 bg-purple-50"
+                    : "border-gray-200 hover:border-purple-300"
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className={`w-6 h-6 ${
+                    paymentMethod === "googlepay" ? "text-purple-600" : "text-gray-400"
+                  }`}
+                  fill="currentColor"
+                >
+                  <path d="M5.4 15.3h.7c.5 0 .9-.3.9-.7s-.4-.7-.9-.7h-.7v1.4zm.7-2.4h.7c.4 0 .7-.2.7-.6s-.3-.6-.7-.6h-.7v1.2zM8.2 17H6V9.9h2.2c1.3 0 2.1.7 2.1 1.7 0 .7-.5 1.2-1 1.4.7.2 1.2.8 1.2 1.5 0 1.1-.9 1.5-2.3 1.5zM12.2 17h-1.3V9.9h1.3V17zM13.8 17l-2-7.1h1.4l1.4 5.6 1.4-5.6h1.4l-2 7.1h-1.6zM12.6 8.1V6h10.3v2.1z"/>
+                </svg>
+                <span className="font-medium">Google Pay</span>
+              </button>
+
+              <button
+                onClick={() => handleSelectPaymentMethod("upi")}
+                className={`w-full flex items-center gap-3 p-4 rounded-lg border transition-all ${
+                  paymentMethod === "upi"
+                    ? "border-purple-600 bg-purple-50"
+                    : "border-gray-200 hover:border-purple-300"
+                }`}
+              >
+                <QrCode className={`w-6 h-6 ${
+                  paymentMethod === "upi" ? "text-purple-600" : "text-gray-400"
+                }`} />
+                <span className="font-medium">UPI Payment</span>
+              </button>
+            </div>
+
+            {paymentMethod === "upi" && (
+              <div className="flex flex-col items-center border rounded-lg p-4 bg-gray-50">
+                <p className="text-sm text-gray-600 mb-2">Scan with any UPI app to pay</p>
+                <div className="bg-white p-3 rounded-lg shadow-sm mb-2">
+                  <QrCode className="w-32 h-32 mx-auto text-black" />
+                </div>
+                <p className="text-xs text-gray-500">UPI ID: kevinshop@ybl</p>
+              </div>
+            )}
+          </div>
+          
+          <div>
+            <h3 className="font-semibold text-lg border-b pb-2 mb-4">Order Summary</h3>
+            <div className="max-h-64 overflow-y-auto mb-4">
               {items.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <span>{item.title} (x{item.quantity})</span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                <div key={item.id} className="flex justify-between py-2 text-sm border-b">
+                  <div className="flex gap-2">
+                    <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded" />
+                    <div>
+                      <p className="font-medium">{item.title}</p>
+                      <p className="text-gray-500">Qty: {item.quantity}</p>
+                    </div>
+                  </div>
+                  <p className="font-medium">{formatIndianRupee(item.price * item.quantity)}</p>
                 </div>
               ))}
             </div>
-            <div className="flex justify-between font-bold text-lg border-t pt-2">
-              <span>Total:</span>
-              <span className="text-purple-600">${total.toFixed(2)}</span>
+            
+            <div className="space-y-2 border-b pb-4 mb-4">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Subtotal</span>
+                <span>{formatIndianRupee(total)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Shipping</span>
+                <span>{formatIndianRupee(total > 10000 ? 0 : 199)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">GST (18%)</span>
+                <span>{formatIndianRupee(Math.round(total * 0.18))}</span>
+              </div>
             </div>
-          </div>
-
-          <div className="mt-6 space-y-3">
-            <button className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition-colors">
-              Confirm Payment
-            </button>
+            
+            <div className="flex justify-between font-bold text-lg">
+              <span>Total:</span>
+              <span className="text-purple-600">
+                {formatIndianRupee(total + (total > 10000 ? 0 : 199) + Math.round(total * 0.18))}
+              </span>
+            </div>
+            
+            <div className="mt-4 text-sm text-gray-600">
+              <p>Estimated delivery: {deliveryDate}</p>
+            </div>
+            
             <button
-              onClick={onClose}
-              className="w-full bg-gray-100 text-gray-700 py-3 rounded-md hover:bg-gray-200 transition-colors"
+              onClick={handleCompletePayment}
+              disabled={!paymentMethod}
+              className="w-full flex items-center justify-center gap-2 mt-6 bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed transform active:scale-95"
             >
-              Cancel
+              Complete Payment
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
